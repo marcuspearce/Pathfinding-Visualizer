@@ -10,9 +10,7 @@ export default class GridSquare extends Component {
 
     render() {
         return (
-            <div>
-                <p>This is a GridSquare</p>
-            </div>
-        )
+            <div className="gridSquare"></div>
+        );
     }
 }

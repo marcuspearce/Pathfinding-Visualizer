@@ -1,0 +1,6 @@
+.gridSquare {
+    height: 25px;
+    width: 25px;
+    outline: 1px solid rgb(175,216,248);
+    display: inline-block;
+}
