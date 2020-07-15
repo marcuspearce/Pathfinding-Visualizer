@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Node from "./Node/Node";
-import {dijkstra, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
+import {dijkstra} from '../algorithms/dijkstra';
+import {getNodesInShortestPathOrder} from '../algorithms/helper-func-algorithms';
 
 import "./PathfindingVisualizer.css";
 
@@ -31,6 +32,7 @@ export default class PathfindingVisualizer extends Component {
     }
 
     handleMouseEnter(row,col) {
+        // below allows user to hold mouse down and "drag" to make wall
         if(!this.state.mouseIsPressed) return;
         const newGrid = getNewGridWithWallToggled(this.state.grid,row,col);
         this.setState({grid:newGrid});
@@ -84,10 +86,50 @@ export default class PathfindingVisualizer extends Component {
         // test returns correct shortest path 
         // for(const node of nodesInShortestPathOrder){
         //     console.log("hello");
-        //     console.log(node);
+        //     console.log(`info: ${node.getElementById} , ${node.row} , ${node.col}`);
         // }
         this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     }
+
+
+
+
+
+    // go thru each node of grid and reset states, init start and end
+    reset() {
+        // const resetGrid = this.state.grid.slice();
+
+        const resetGrid = [];
+        for (let row = 0; row < NUM_ROWS; row++) {
+            const currentRow = [];
+            for (let col = 0; col < NUM_COLS; col++) {
+                currentRow.push(createNode(row,col));
+            }
+            resetGrid.push(currentRow);
+        }
+
+        for (let i = 0; i < NUM_ROWS; i++) {
+            for (let j = 0; j < NUM_COLS; j++) {
+                const node = resetGrid[i][j];
+                // console.log(node);
+                document.getElementById(`node-${node.row}-${node.col}`).className = 'node';
+                if(node.row === START_ROW && node.col === START_COL) {
+                    document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-start';
+                }
+                if(node.row === FINISH_ROW && node.col === FINISH_COL) {
+                    document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-finish';
+                }
+            }
+        }
+
+        this.setState({ grid: resetGrid });
+
+        // this.setState({grid:resetGrid});
+    }
+
+
+
+
 
 
     render() {
@@ -98,6 +140,9 @@ export default class PathfindingVisualizer extends Component {
             <>
                 <button onClick={() => this.visualizeDijkstra()}>
                     Visualize Dijkstra's Algorithm
+                </button>
+                <button onClick={() => this.reset()}>
+                    Reset
                 </button>
                 <div className="grid">
                     {grid.map((row, rowIndex) => {
